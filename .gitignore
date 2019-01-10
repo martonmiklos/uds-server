@@ -1,0 +1,7 @@
+Debug/
+Inc/buildnumber.h
+buildnumber.tmp
+.mxproject
+.settings
+.directory
+*.elf.launch

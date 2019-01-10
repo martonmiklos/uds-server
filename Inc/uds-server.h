@@ -1,8 +1,9 @@
 /* (c) 2015 Open Garages */
 
+#ifndef UDS_SERVER_H
+#define UDS_SERVER_H
+
 /* Helper Macros */
-#define SET_BIT(val, bitIndex) val |= (1 << bitIndex)
-#define CLEAR_BIT(val, bitIndex) val &= ~(1 << bitIndex)
 #define TOGGLE_BIT(val, bitIndex) val ^= (1 << bitIndex)
 #define IS_SET(val, bitIndex) (val & (1 << bitIndex))
 
@@ -69,3 +70,7 @@
 /* Periodic Data Message types */
 #define PENDING_READ_DATA_BY_ID_GM         1
 
+void handle_pkt(int can, struct canfd_frame frame);
+void handle_pending_data(int can);
+
+#endif
