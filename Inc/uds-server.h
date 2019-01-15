@@ -19,7 +19,7 @@
 #define OBD_MODE_VEHICLE_INFORMATION      0x09
 #define OBD_MODE_READ_PERM_DTC            0x0A
 
-/* UDS SIDs */
+/* UDS Service IDs */
 #define UDS_SID_DIAGNOSTIC_CONTROL        0x10 // GMLAN = Initiate Diagnostics
 #define UDS_SID_ECU_RESET                 0x11
 #define UDS_SID_GM_READ_FAILURE_RECORD    0x12 // GMLAN
@@ -70,7 +70,7 @@
 /* Periodic Data Message types */
 #define PENDING_READ_DATA_BY_ID_GM         1
 
-void handle_pkt(int can, struct canfd_frame frame);
-void handle_pending_data(int can);
+void handle_pkt(struct canfd_frame frame);
+void handle_pending_data();
 
 #endif

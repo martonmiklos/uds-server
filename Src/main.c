@@ -100,8 +100,30 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
-  if (HAL_CAN_Start(&hcan) != HAL_OK)
+  if (HAL_CAN_Init(&hcan) != HAL_OK) {
+    Error_Handler();
+  }
+
+  /*##-2- Configure the CAN Filter ###########################################*/
+  CAN_FilterTypeDef  sFilterConfig;
+  sFilterConfig.FilterBank = 0;
+  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  sFilterConfig.FilterIdHigh = 0x0000;
+  sFilterConfig.FilterIdLow = 0x0000;
+  sFilterConfig.FilterMaskIdHigh = 0x0000;
+  sFilterConfig.FilterMaskIdLow = 0x0000;
+  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+  sFilterConfig.FilterActivation = ENABLE;
+  sFilterConfig.SlaveStartFilterBank = 14;
+
+  if (HAL_CAN_ConfigFilter(&hcan, &sFilterConfig) != HAL_OK)
   {
+    /* Filter configuration Error */
+    Error_Handler();
+  }
+
+  if (HAL_CAN_Start(&hcan) != HAL_OK) {
     Error_Handler();
   }
   /* USER CODE END 2 */
@@ -112,13 +134,21 @@ int main(void)
   {
 
   /* USER CODE END WHILE */
-    if (HAL_CAN_GetRxFifoFillLevel(&hcan, CAN_RX_FIFO0)) {
-      HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxMessage, frame.data);
+    if (HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &RxMessage, frame.data) == HAL_OK) {
       frame.len = RxMessage.DLC;
       frame.can_id = RxMessage.ExtId;
-      handle_pkt(1, frame);
+      handle_pkt(frame);
     }
-    handle_pending_data(1);
+    handle_pending_data();
+    /*uint8_t data[5] = "MIKI";
+    uint32_t mb;
+    CAN_TxHeaderTypeDef header;
+    header.DLC = 4;
+    header.ExtId = 42;
+    header.IDE = CAN_ID_EXT;
+    header.RTR = CAN_RTR_DATA;
+    HAL_CAN_AddTxMessage(&hcan, &header, data, &mb);
+    HAL_Delay(1000);*/
   /* USER CODE BEGIN 3 */
 
   }
